@@ -1,60 +1,72 @@
 <script>
 
-// set the dimensions and margins of the graph
-var margin = {top: 10, right: 10, bottom: 10, left: 10},
-  width = 445 - margin.left - margin.right,
-  height = 445 - margin.top - margin.bottom;
+chart = {
+    const root = treemap(data);
+  
+    const svg = d3.create("svg")
+        .attr("viewBox", [0, 0, width, height])
+        .style("font", "10px sans-serif");
+  
+    const leaf = svg.selectAll("g")
+      .data(root.leaves())
+      .join("g")
+        .attr("transform", d => `translate(${d.x0},${d.y0})`);
+  
+    leaf.append("title")
+        .text(d => `${d.ancestors().reverse().map(d => d.data.name).join("/")}\n${format(d.value)}`);
+  
+    leaf.append("rect")
+        .attr("id", d => (d.leafUid = DOM.uid("leaf")).id)
+        .attr("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name); })
+        .attr("fill-opacity", 0.6)
+        .attr("width", d => d.x1 - d.x0)
+        .attr("height", d => d.y1 - d.y0);
+  
+    leaf.append("clipPath")
+        .attr("id", d => (d.clipUid = DOM.uid("clip")).id)
+      .append("use")
+        .attr("xlink:href", d => d.leafUid.href);
+  
+    leaf.append("text")
+        .attr("clip-path", d => d.clipUid)
+      .selectAll("tspan")
+      .data(d => d.data.name.split(/(?=[A-Z][a-z])|\s+/g).concat(format(d.value)))
+      .join("tspan")
+        .attr("x", 3)
+        .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
+        .attr("fill-opacity", (d, i, nodes) => i === nodes.length - 1 ? 0.7 : null)
+        .text(d => d);
+  
+    return svg.node();
+  }
 
-// append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
-.append("svg")
-  .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom)
-.append("g")
-  .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
+  data = Object {name: "flare", children: Array(10)}
 
-// Read data
-d3.csv('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_hierarchy_1level.csv', function(data) {
+  data = FileAttachment("flare-2.json").json()
 
-  // stratify the data: reformatting for d3.js
-  var root = d3.stratify()
-    .id(function(d) { return d.name; })   // Name of the entity (column name is name in csv)
-    .parentId(function(d) { return d.parent; })   // Name of the parent (column name is parent in csv)
-    (data);
-  root.sum(function(d) { return +d.value })   // Compute the numeric value for each entity
+  treemap = ƒ(data)
 
-  // Then d3.treemap computes the position of each element of the hierarchy
-  // The coordinates are added to the root object above
-  d3.treemap()
+  treemap = data => d3.treemap()
+    .tile(tile)
     .size([width, height])
-    .padding(4)
-    (root)
+    .padding(1)
+    .round(true)
+  (d3.hierarchy(data)
+      .sum(d => d.value)
+      .sort((a, b) => b.value - a.value))
 
-console.log(root.leaves())
-  // use this information to add rectangles:
-  svg
-    .selectAll("rect")
-    .data(root.leaves())
-    .enter()
-    .append("rect")
-      .attr('x', function (d) { return d.x0; })
-      .attr('y', function (d) { return d.y0; })
-      .attr('width', function (d) { return d.x1 - d.x0; })
-      .attr('height', function (d) { return d.y1 - d.y0; })
-      .style("stroke", "black")
-      .style("fill", "#69b3a2");
+width = 954
 
-  // and to add the text labels
-  svg
-    .selectAll("text")
-    .data(root.leaves())
-    .enter()
-    .append("text")
-      .attr("x", function(d){ return d.x0+10})    // +10 to adjust position (more right)
-      .attr("y", function(d){ return d.y0+20})    // +20 to adjust position (lower)
-      .text(function(d){ return d.data.name})
-      .attr("font-size", "15px")
-      .attr("fill", "white")
-})
+height = 954
+
+format = ƒ(t)
+
+color = ƒ(i)
+
+color = d3.scaleOrdinal(d3.schemeCategory10)
+
+d3 = Object {format: ƒ(t), formatPrefix: ƒ(t, n), timeFormat: ƒ(t), timeParse: ƒ(t), utcFormat: ƒ(t), utcParse: ƒ(t), Adder: class, Delaunay: class, FormatSpecifier: ƒ(t), Voronoi: class, active: ƒ(t, n), arc: ƒ(), area: ƒ(t, n, e), areaRadial: ƒ(), ascending: ƒ(t, n), autoType: ƒ(t), axisBottom: ƒ(t), axisLeft: ƒ(t), axisRight: ƒ(t), axisTop: ƒ(t), …}
+
+d3 = require("d3@6")
+
 </script>

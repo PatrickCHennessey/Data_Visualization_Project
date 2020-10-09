@@ -9,12 +9,25 @@
 
 <script src="https://d3js.org/d3.v4.js"></script>
 
-d3.csv("new_merged_df.csv").then(function(tvData) {
-    console.log(tvData);
+// Load data from hours-of-tv-watched.csv
+d3.csv("new_merged_df.csv").then(function(music_data) {
 
-// log a list of names
-var Artists = tvData.map(data => data.name);
-console.log("Artists", Artists);
+    console.log(music_data);
+  
+    // log a list of names
+    var artists = music_data.map(music_data => data.name);
+    console.log("Artists", artists);
+  
+    // Cast each hours value in tvData as a number using the unary + operator
+    music_data.forEach(function(music_data) {
+      data.name = +data.name;
+      console.log("Artists:", data.artists);
+      console.log("Name:", data.name);
+    });
+  }).catch(function(error) {
+    console.log(error);
+  });
+  
 
 
 
