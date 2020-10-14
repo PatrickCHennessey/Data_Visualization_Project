@@ -1,88 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
-        <title>Bootstrap Components</title>
-        <link
-          rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossorigin="anonymous"
-        />
-        <link rel="stylesheet" href="style.css" />
         <script src="https://d3js.org/d3.v6.min.js"></script>
-        <!--<script src="https://d3js.org/d3.v4.js"></script>-->
-      </head>
-      <body>
-        <nav class="navbar navbar-expand-md navbar-light bg_white no_pad">
-          <div id="Title">
-            <a href="index.html">Top Left Title</a>
-          </div>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          ​
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item dropdown active">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Plots
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="(Needtocreate)ZoomableSunburst.html">Zoommable Sunburst</a>
-                  <a class="dropdown-item" href="(Needtocreate)BarRaceChart.html">Bar Race Chart</a>
-                  <a class="dropdown-item" href="(Needtocreate).TreeMap.html">Treemap Chart</a>
-                  <a class="dropdown-item" href="windspeed.html">Wind Speed</a> (add anything here?)
-                </div>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="PPcomparison.html" (Need to create?)
-                  >PP Comparison <span class="sr-only">(current)</span></a
-                >
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="csv_data.html" (need to create)>CSV Data?</a>
-              </li>
-            </ul>
-          </div>
-        </nav>
+    
+    </head>
+ <style>
+     @import url('https://fonts.googleapis.com/css?family=Raleway');
 
+     body {
+        font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+     }
+ </style>   
 
-<body>
-    <div class="wrap_container container_padding">
-        <div class="container">
-          ​
-          <!-- Row 1 -->
-        <div class="row">
-            <div class="col-md-8 bg_white container_padding">
-              <h1 class="h1">Zoomable Sunburst</h1>
-            
-               <img href="sunburst.js" 
-                alt="Zoomable Sunburst"
-              />
-              <p class="h4">
-                Should load in json
-              </p>
-              <p class="h4"> </p>
-              <script src="https://d3js.org/d3.v6.min.js"></script>
-         </div>
+<body>   
+    <svg width = "500" height = "500"></svg>
+<label><input class="sizeSelect" type="radio" name="mode" value="size" checked /> Artist</label>
+<label><input class="sizeSelect"  type="radio" name="mode" value="count" /> Song</label>
 </body>
+<script>
+var nodeData = {
+    "name": "TOPICS", "children": [{
+        "name": "Topic A",
+       "children": [{"name": "Sub A1", "size": 4}, {"name": "Sub A2", "size": 4}]
+    }, {
+        "name": "Topic B",
+        "children": [{"name": "Sub B1", "size": 3}, {"name": "Sub B2", "size": 3}, {
+            "name": "Sub B3", "size": 3}]
+    }, {
+        "name": "Topic C",
+        "children": [{"name": "Sub A1", "size": 4}, {"name": "Sub A2", "size": 4}]
+    }]
+}
 
+var width = 500;  
+var height = 500;
+var radius = math.min(width, height) / 2;  
+var color = d3.scaleOrdinal(d3.schemeCategory20b);   
+var sizeIndicator = "size";
+var colorIndicator = "sentiment";
+
+var g = d3.select('svg')  
+    .attr('width', width)  
+    .attr('height', height)
+    .append('g')  
+    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');  
+
+var partition = d3.partition()  
+    .size([2 * math.PI, radius]);  
+
+d3.json("new_merged_df.json", function(error, nodeData) {
+    if (error) throw error;    
+
+    var root = d3.hierarchy(nodeData)  
+        .sum(function (d) { return d.size}) 
+        .sort(function(a, b) { return b.value - a.value; });
+
+    partition(root);  // <-- 1
+    var arc = d3.arc()  // <-- 2
+        .startAngle(function (d) { d.x0s = d.x0; return d.x0; })
+        .endAngle(function (d) { d.x1s = d.x1; return d.x1; })
+        .innerRadius(function (d) { return d.y0; })
+        .outerRadius(function (d) { return d.y1; });
+
+    var slice = g.selectAll('g')
+        .data(root.descendants())
+        .enter().append('g').attr("class", "node");
+
+    slice.append('path').attr("display", function (d) { return d.depth ? null : "none"; })
+        .attr("d", arc)
+        .style('stroke', '#fff')
+        .style("fill", function (d) { return color((d.children ? d : d.parent).data.name); });  
+
+    slice.append("text")
+        .attr("transform", function(d) {
+            return "translate(" + arc.centroid(d) + ")rotate(" + computeTextRotation(d) + ")"; })
+        .attr("dx", "-20")
+        .attr("dy", ".5em")
+        .text(function(d) { return d.parent ? d.data.name : "" });
+       
+     d3.selectAll(".sizeSelect").on("click", function(d,i) {
+
+// Determine how to size the slices.
+        if (this.value === "size") {
+          root.sum(function (d) { return d.size; });
+        } else {
+          root.count();
+        }
+
+        partition(root);
+
+        slice.selectAll("path").transition().duration(750).attrTween("d", arcTweenPath);
+        slice.selectAll("text").transition().duration(750).attrTween("transform", arcTweenText);
+    });
+});
+
+function arcTweenPath(a, i) {
+
+    var oi = d3.interpolate({ x0: a.x0s, x1: a.x1s }, a);
+
+    function tween(t) {
+        var b = oi(t);
+        a.x0s = b.x0;
+        a.x1s = b.x1;
+        return arc(b);
+    }
+
+    return tween;
+}
+
+    function arcTweenText(a, i) {
+
+        var oi = d3.interpolate({ x0: a.x0s, x1: a.x1s }, a);
+        function tween(t) {
+            var b = oi(t);
+            return "translate(" + arc.centroid(b) + ")rotate(" + computeTextRotation(b) + ")";
+        }
+        return tween;
+}
+
+g.selectAll('g')  
+    .data(root.descendants())  
+    .enter().append('g').attr("class", "node").append('path')  
+    .attr("display", function (d) { return d.depth ? null : "none"; })  
+    .attr("d", arc)  
+    .style('stroke', '#fff') 
+    .style("fill", function (d) { return color((d.children ? d : d.parent).data.name); });
+
+g.selectAll(".node")
+    .append("text")
+    .attr("transform", function(d) {
+        return "translate(" + arc.centroid(d) + ")rotate(" + computeTextRotation(d) + ")"; })
+    .attr("dx", "-20") // radius margin
+    .attr("dy", ".5em") // rotation align
+    .text(function(d) { return d.parent ? d.data.name : "" });
+
+
+    function computeTextRotation(d) {
+        var angle = (d.x0 + d.x1) / math.PI * 90;
+        return (angle < 120 || angle > 270) ? angle : angle + 180; 
+    };
+
+</script>
 
 </html>
