@@ -30,7 +30,7 @@
   Create drop down user clickable box containing years 1999-2019
 
   1) Load source data.
-  2) Filter/parse to pull out the years. from genre_year_df.json
+  2) Filter/parse to pull out the years from genre_year_df.json
   3) Use the years from the data to create the options for the year selector, below.
 
 --> 
@@ -44,7 +44,7 @@
   <div id="container"></div>
   
 
-  <script>
+   <script>
 
     anychart.onDocumentReady(function () {
 
@@ -76,6 +76,7 @@
         }
         console.log(final_array);
         // Add each to an array
+        // There is a problem with array referencing here.
 
 
 
@@ -98,7 +99,7 @@
 
       // Draw from the data all available years to make the drop down options
 
-      // Default to lowest year?
+      // Default to lowest year? 1999
 
       // Parse the source data by year to create the data set for the graphing system
 
@@ -109,6 +110,10 @@
       // create data set on our data
       var dataSet = anychart.data.set([
         
+      How are we pulling this data into each Spotify attribute list?
+      Grab values from /API route, will need to parse values, and append them to proper category
+
+
         ['Danceability',
           0.3666666666666667,
           0.5583333333333333,
@@ -203,4 +208,4 @@
 </script>
 </body>
 </html>
-                
+             
