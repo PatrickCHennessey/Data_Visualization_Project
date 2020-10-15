@@ -1,0 +1,32 @@
+1. Your visualization must include a Python Flask–powered API, HTML/CSS, JavaScript, and at least one database (SQL, MongoDB, SQLite, etc.). 
+
+2. Your project should fall into one of the below four tracks: 
+        A custom “creative” D3.js project (i.e., a nonstandard graph or chart)
+
+3. Your project should include at least one JS library that we did not cover.
+
+4. Your project must be powered by a data set with at least 100 records.
+
+5. Your project must include some level of user-driven interaction (e.g., menus, dropdowns, textboxes).
+
+6. Your final visualization should ideally include at least three views. 
+
+
+Suggestions:
+
+Setup starting FLASK app.py file and template folder.
+
+Will need at least three routes in Flask:
+
+    /            default (index.html) for simple display of the page
+    /api/...     route by which JS can fetch results from MongoDB via Flask
+    /create_db   route to intialize the Mongo DB using your source data
+
+Create the route in app.py that populates the MongoDB with your source data. Test.
+
+Create /index route. Upon main index load (/ path):
+
+    Search MongoDB for unique year values -- use these to populate year drop-down
+
+Generate graph button calls (via fetch) a Flask route (/api) that queries the MongoDB for data for the selected year.
+Upon reply, data is displayed in graphing system.

@@ -1,0 +1,206 @@
+<html>
+<head>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-radar.min.js"></script>
+  <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+  <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+
+  <script src="https://cdn.anychart.com/releases/8.9.0/js/anychart-data-adapter.min.js"></script>
+
+
+
+
+<style type="text/css">
+    html,
+    body,
+    #container {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  
+</style>
+</head>
+<body>
+
+<!--
+  Create drop down user clickable box containing years 1999-2019
+
+  1) Load source data.
+  2) Filter/parse to pull out the years. from genre_year_df.json
+  3) Use the years from the data to create the options for the year selector, below.
+
+--> 
+
+<div id="year">
+    <select id="year_select">
+      <!--Populate with options using javascript-->
+    </select>
+</div>
+
+  <div id="container"></div>
+  
+
+  <script>
+
+    anychart.onDocumentReady(function () {
+
+
+      anychart.data.loadCsvFile("genre_year_df_1999.csv", function (data) {
+        //console.log(data)
+          // create chart from loaded data
+
+        // Convert incoming genre__year_df_1999.csv file into anychart-format data list
+        // Split data on line-feeds (splits file into individual lines)
+        let lines = data.replace(/\r/g, "").split(/\n/); // Removes returns first
+        //console.log(lines);
+
+        // Split each line on commmas
+        let the_line;
+        let words;
+        let columns = lines[0].split(',').length;
+        let final_array = [];
+        for (let i=0; i<columns; i++ ) {
+          final_array.push([]); // Fill with empty arrays
+        }
+        console.log(final_array);
+        console.log("Print blank array ^^^");
+        for (the_line of lines) {
+          words = the_line.split(',');
+          for (let i=0; i<columns; i++) {
+            final_array[i].push([...words]);
+          }
+        }
+        console.log(final_array);
+        // Add each to an array
+
+
+
+
+        // Determine which columns have needed data
+
+
+        chart = anychart.radar(data);
+
+        // set title
+        chart.title("Billboard Songs Spotify Yearly Attributes");
+
+        // draw chart
+        chart.container("container").draw();
+      });
+
+    });
+
+      // Load json data XXXX
+
+      // Draw from the data all available years to make the drop down options
+
+      // Default to lowest year?
+
+      // Parse the source data by year to create the data set for the graphing system
+
+      // Pass the parsed dataset to the graphing system, generate graph
+
+
+/*
+      // create data set on our data
+      var dataSet = anychart.data.set([
+        
+        ['Danceability',
+          0.3666666666666667,
+          0.5583333333333333,
+          0.7583333333333333
+        ],
+        ['Duration',
+          0.06578947368421052,
+          0.15576923076923077,
+          0.24473684210526317
+        ],
+        ['Energy',
+          0.9576093653727663,
+          0.8268638324091188,
+          0.8905730129390017
+        ],
+        ['Liveness', 0.22638827767366515, 0.10979008847837246, 1],
+        ['Loudness', 0.5390698290165805, 1, 0.5487479259581779],
+        ['Mode',
+          0.02995156531259858,
+          0.00783120233080335,
+          0.1299664111937944
+        ],
+        ['Popularity',
+          0.3087248322147651,
+          -0.12416107382550336,
+          0.19463087248322147
+        ],
+        ['Tempo', 1, 0.11982978723404256, 0.6180425531914894],
+        ['Valence'] //insert numbers 
+      );
+
+      // map data for the first series, take x from the zero column and value from the first column of data set
+      var data1 = dataSet.mapAs({ x: 0, value: 1 });
+
+      // map data for the second series, take x from the zero column and value from the second column of data set
+      var data2 = dataSet.mapAs({ x: 0, value: 2 });
+
+      // map data for the third series, take x from the zero column and value from the third column of data set
+      var data3 = dataSet.mapAs({ x: 0, value: 3 });
+
+      // create radar chart
+      var chart = anychart.radar();
+
+      // set chart title text settings
+      chart
+        .title('Comparison Chart')
+        
+        // set chart legend
+        .legend(true);
+
+      // set chart padding settings
+      chart.padding().bottom(70);
+
+      // set chart yScale settings
+      chart.yScale().minimum(-0.2).maximum(1).ticks({ interval: 0.2 });
+
+      // create chart label with description
+      chart
+        .label()
+        .text(
+          'This chart compares countries by using specific indicators.\n' +
+          'For each indicator, the value 1 is assigned to the country that has the highest value.\n' +
+          'Other countries have their value computed as a proportion of the country with the highest value.'
+        )
+        .anchor('center-bottom')
+        .position('center-bottom')
+        .fontWeight('normal')
+        .fontSize(11)
+        .fontFamily('tahoma')
+        .fontColor('rgb(35,35,35)')
+        .offsetY(15);
+
+      // create first series with mapped data
+      chart.line(data1).name('USA').markers(true);
+
+      // create second series with mapped data
+      chart.line(data2).name('Russia').markers(true);
+
+      // create third series with mapped data
+      chart.line(data3).name('China').markers(true);
+
+      // set tooltip format
+      chart.tooltip().format('Value: {%Value}{decimalsCount: 2}');
+
+      // set container id for the chart
+      chart.container('container');
+
+      // initiate chart drawing
+      chart.draw();
+    });
+  */
+</script>
+</body>
+</html>
+                
