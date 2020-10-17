@@ -1,28 +1,30 @@
 var TopGenre = [
     { 
-        attributes = Danceability = {
+        attributes = [ Danceability = {
       
-        Year = 2015,
-        Genre { 
-      Country')": 0.5998359375,
-      Electronic')": 0.598,
-      Folk')": 0.255,
-      Others')": 0.964,
-      Pop')": 0.6258234443,
-      R&B')": 0.7000684932,
-      Rap')": 0.7136255924,
-      Rock')": 0.5372895928,
+        Year : 2015,
+        Genre = { 
+      Country: 0.5998359375,
+      Electronic: 0.598,
+      Folk: 0.255,
+      Others: 0.964,
+      Pop: 0.6258234443,
+      R&B: 0.7000684932,
+      Rap: 0.7136255924,
+      Rock: 0.5372895928
+        }
 
 
-      Year = 2016,
-        Genre { 
-      Country')": 0.5572280702,
-      Electronic')": 0.338,
-     Folk')": 0.28,
-      Pop')": 0.6251623377,
-      R&B')": 0.6351506849,
-      Rap')": 0.7702807487,
-      Rock')": 0.6139058824,
+      Year : 2016,
+        Genre = { 
+      Country: 0.5572280702,
+      Electronic: 0.338,
+     Folk: 0.28,
+      Pop: 0.6251623377,
+      R&B: 0.6351506849,
+      Rap: 0.7702807487,
+      Rock: 0.6139058824
+    }
 
       Year = 2017,
         Genre { 
