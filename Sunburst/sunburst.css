@@ -1,0 +1,118 @@
+/* body { 
+    background-color:blue;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+
+
+  h1 {
+    text-align: center;
+    font-size: 500% ;
+  }
+  
+  h2 {
+    text-align: center;
+    font-size: 500%;
+  }
+  
+  /* img {
+    box-shadow: 10px 10px 5px black;
+    border-style: solid;
+    color: black;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+   */
+  /* .row {
+    padding: 10px;
+    display: block;
+    flex-wrap: wrap;
+  }
+  
+  .column {
+    float: left;
+    width: 50%;
+    padding: 50px;
+  }
+  .column img {
+    margin-top: 8px;
+    vertical-align: middle;
+  }
+  
+  p {
+    font-size: 200%;
+    text-align: justify;
+  }
+  
+  footer {
+    padding-top: 20mm;
+    text-align: center;
+  } */ 
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    background-color:grey;
+    width: 960px;
+    height: 700px;
+    margin-top: 10px;
+  }
+  
+  #main {
+    float: center;
+    width: 750px;
+  }
+  
+  #sidebar {
+    float: left;
+    width: 200px;
+  }
+  
+  #sequence {
+    width: 600px;
+    height: 70px;
+  }
+  
+  #legend {
+    padding: 10px 0 0 3px;
+  }
+  
+  #sequence text, #legend text {
+    font-weight: 600;
+    fill: #fff;
+  }
+  
+  #chart {
+    position: relative;
+  }
+  
+  #chart path {
+    stroke: #fff;
+  }
+  
+  #explanation {
+    position: absolute;
+    top: 260px;
+    left: 305px;
+    width: 140px;
+    text-align: center;
+    color: #666;
+    z-index: -1;
+  }
+  
+  #percentage {
+    font-size: 2.5em;
+  } 
+
+  h1 {
+    text-align: center;
+    font-size: 500% ;
+  }
+
+  footer {
+    padding-top: 20mm;
+    text-align: center;
+  } 
